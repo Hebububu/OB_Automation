@@ -89,12 +89,11 @@
 2. 플랫폼, 판매자ID, 상품명 순서대로 데이터 정렬 (sort_by_platform_seller_product)
 - 일단 ID별과 플랫폼별로 만들긴 했는데, 한번에 데이터 정렬하는 기능도 필요함. 
 
-
-
 ### 2. 데이터베이스 구조 구현
-- SQLite 모델 정의 (app/database/models.py)
-- 데이터베이스 연동 (SQLAlchemy 세션 관리)
-- 데이터 저장/조회 함수 구현
+1. 데이터베이스는 platform, product_code, product_name, tag 4개의 컬럼으로 구성
+2. models.py 에서 테이블 정의 
+3. connection.py 에서 데이터베이스 연결 설정
+4. init_db.py 에서 데이터베이스 초기화
 
 ### 3. 관리용 태그 시스템 구현
 - 태그 관리용 모듈 (app/core/tag_manager.py)
