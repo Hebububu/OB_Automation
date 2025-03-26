@@ -72,6 +72,17 @@
 ### 1. 기본 데이터 처리
 - xlsx 파서 구현 (app/core/parser.py)
 
+#### parser.py
+- 만들어야 할 기능들이 무엇이 있을까..
+1. 초기화 (__init__)
+2. 파일 읽기 (read_xslx)
+3. 데이터 검증 (validate_data)
+4. 플랫폼별 데이터 정렬 (sort_by_platform)
+5. 판매자 ID 별 데이터 정렬 (sort_by_id)
+6. 관리용 태그 기반 필터링 (filter_by_tag)
+7. 출고 수량 집계 (count_ob)
+8. 결과 내보내기 (export_xslx)
+
 ### 2. 데이터베이스 구조 구현
 - SQLite 모델 정의 (app/database/models.py)
 - 데이터베이스 연동 (SQLAlchemy 세션 관리)
