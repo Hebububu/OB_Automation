@@ -83,6 +83,14 @@
 7. 출고 수량 집계 (count_ob)
 8. 결과 내보내기 (export_xslx)
 
+- 만들다 보니 추가한 기능
+1. 판매 사이트별 주문 수량 합계 계산 (count_by_platform)
+- 나중에 유용하게 쓸 거 같음. 
+2. 플랫폼, 판매자ID, 상품명 순서대로 데이터 정렬 (sort_by_platform_seller_product)
+- 일단 ID별과 플랫폼별로 만들긴 했는데, 한번에 데이터 정렬하는 기능도 필요함. 
+
+
+
 ### 2. 데이터베이스 구조 구현
 - SQLite 모델 정의 (app/database/models.py)
 - 데이터베이스 연동 (SQLAlchemy 세션 관리)
