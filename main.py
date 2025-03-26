@@ -13,6 +13,7 @@ validated_df = parser.validate_data(df) # 엑셀 파일 검증
 sorted_df = parser.sort_by_platform_seller_product(df) # 순서대로 정렬
 
 data_per_platform = parser.count_by_platform(df) # 판매사이트별 판매량 집계
+print(data_per_platform)
 
 parser.export_xlsx(sorted_df,"data/output") # 엑셀로 데이터 내보내기
 
