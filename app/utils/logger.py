@@ -39,8 +39,9 @@ class mainLogger:
         console_handler.setFormatter(formatter)
 
         # 핸들러 추가
-        self.logger.addHandler(file_handler)
-        self.logger.addHandler(console_handler)
+        if not self.logger.handlers:
+            self.logger.addHandler(file_handler)
+            self.logger.addHandler(console_handler)
 
     def info(self, message):
         self.logger.info(message)

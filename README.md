@@ -93,9 +93,13 @@
 
 ### 2. 데이터베이스 구조 구현
 1. 데이터베이스는 platform, product_code, product_name, tag 4개의 컬럼으로 구성
-2. models.py 에서 테이블 정의 
-3. connection.py 에서 데이터베이스 연결 설정
-4. init_db.py 에서 데이터베이스 초기화
+2. DatabaseManager class를 통해 데이터베이스 관리.
+
+3. CRUD 구현
+- add_product (제품 추가)
+- get_product (제품 조회)
+- update_product_tag (태그 수정)
+- delete_product (제품 삭제)
 
 ### 3. 관리용 태그 시스템 구현
 - 태그 관리용 모듈 (app/core/tag_manager.py)

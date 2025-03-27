@@ -16,3 +16,6 @@ class Product(Base):
     __table_args__ = (
         UniqueConstraint('platform', 'product_code', name='uix_platform_product'),
     )
+
+    def __repr__(self):
+        return f"id= {self.id}, platform= {self.platform}, code= {self.product_code}, name= {self.product_name}, tag= {self.tag}"
