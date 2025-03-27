@@ -3,19 +3,20 @@ import pandas as pd
 import os
 
 from app.database.databasemanager import DatabaseManager
+from app.core.tag_manager import TagManager
 from app.utils.logger import mainLogger
 
 logger = mainLogger()
 
 class XLSXParser:
-    """ 엑셀 데이터를 활용하기 위한 클래스입니다. """
+    """ 엑셀 데이터를 활용하기 위한 클래스입니다."""
     def __init__(self):
         """
         초기화
         - 필요한 컬럼 정의
         - 기본 설정값 초기화
         """
-        
+
         self.required_columns = [
             "판매사이트명",
             "판매사이트 상품코드",
@@ -106,12 +107,22 @@ class XLSXParser:
             logger.error(f"플랫폼, 판매자, 상품 순 정렬 실패 {str(e)}")
             raise Exception(f"플랫폼, 판매자, 상품 순 정렬 실패 {str(e)}")
 
-    def filter_by_tag(self, df, tag_manager):
+    def filter_by_tag(self, df):
         """
         관리용 태그 기반 필터링
         - 태그가 있는 제품만 필터링
         - 필터링된 DataFrame 반환
         """
+        tag = TagManager()
+        try:
+            logger.info("태그 기반 필터링 시작")
+            filtered_df = tag.filter_valid_tags(df)
+            logger.info(f"태그 기반 필터링 완료: {len(filtered_df)} 행")
+            return filtered_df
+        
+        except Exception as e:
+            logger.error(f"태그 필터링 실패. {str(e)}")
+            raise
     
     def count_ob(self, df):
         """
@@ -175,8 +186,8 @@ class XLSXParser:
             tag = input("관리용 태그를 입력해주세요. (없으면 Enter): ").strip()
 
             if not product_name:
-                print("상품명이 입력되지 않아 등록을 건너뜁니다")
-                continue
+                product_name = sale_name
+                print(f"관리상품명이 입력되지 않아 판매상품명을 사용합니다.")
 
             # DB 등록
             try:

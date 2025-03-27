@@ -14,3 +14,9 @@ validated_df = parser.validate_data(df)
 sorted_df = parser.sort_by_platform_seller_product(df)
 
 parser.register_products_interactively(sorted_df)
+
+filtered_df = parser.filter_by_tag(sorted_df)
+
+parser.export_xlsx(filtered_df, output_path= "data/output")
+
+print(parser.count_by_platform(df))
