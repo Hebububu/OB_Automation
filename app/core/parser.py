@@ -1,6 +1,8 @@
 # app/core/parser.py
 import pandas as pd
 import os
+
+from app.database.databasemanager import DatabaseManager
 from app.utils.logger import mainLogger
 
 logger = mainLogger()
@@ -13,6 +15,7 @@ class XLSXParser:
         - 필요한 컬럼 정의
         - 기본 설정값 초기화
         """
+        
         self.required_columns = [
             "판매사이트명",
             "판매사이트 상품코드",
@@ -149,3 +152,41 @@ class XLSXParser:
         except Exception as e:
             logger.error(f"파일 저장 실패: {str(e)}")
             raise Exception(f"파일 저장 실패: {str(e)}")
+        
+    def register_products_interactively(self, df):
+        """
+        데이터프레임을 바탕으로 db에 제품을 저장
+        """
+        for idx, row in df.iterrows():
+            db = DatabaseManager()
+            sale_name = row["상품명"]
+            platform = row["판매사이트명"]
+            product_code = row["판매사이트 상품코드"]
+
+            # 상품 코드 중복 확인
+            existing = db.get_product(platform, product_code)
+            if existing:
+                print(f"{sale_name}은 이미 등록된 제품입니다. 건너뜁니다.")
+                continue
+
+            # 제품명 입력받기
+            print(f"\n[등록 대상] 플랫폼: {platform}, 판매상품명: {sale_name}")
+            product_name = input("관리상품명을 입력해주세요: ").strip()
+            tag = input("관리용 태그를 입력해주세요. (없으면 Enter): ").strip()
+
+            if not product_name:
+                print("상품명이 입력되지 않아 등록을 건너뜁니다")
+                continue
+
+            # DB 등록
+            try:
+                db.add_product(
+                    platform=platform,
+                    product_code=product_code,
+                    product_name=product_name,
+                    tag=tag if tag else None
+                )
+                print(f"{product_name} 등록 완료")
+            
+            except Exception as e:
+                print(f"{product_name} 등록 실패 {str(e)}")
