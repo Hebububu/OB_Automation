@@ -107,22 +107,13 @@ class XLSXParser:
             logger.error(f"플랫폼, 판매자, 상품 순 정렬 실패 {str(e)}")
             raise Exception(f"플랫폼, 판매자, 상품 순 정렬 실패 {str(e)}")
 
-    def filter_by_tag(self, df):
+    def filter_additional_product(self, df):
         """
-        관리용 태그 기반 필터링
-        - 태그가 있는 제품만 필터링
+        추가상품 필터링
+        - 상품명에 '추가상품'이 있는 데이터만 필터링
         - 필터링된 DataFrame 반환
         """
-        tag = TagManager()
-        try:
-            logger.info("태그 기반 필터링 시작")
-            filtered_df = tag.filter_valid_tags(df)
-            logger.info(f"태그 기반 필터링 완료: {len(filtered_df)} 행")
-            return filtered_df
-        
-        except Exception as e:
-            logger.error(f"태그 필터링 실패. {str(e)}")
-            raise
+        return df[df["상품명"].str.contains("추가상품")]
     
     def count_ob(self, df):
         """
@@ -130,6 +121,18 @@ class XLSXParser:
         - 태그별 출고 수량 계산
         - 집계 결과 반환
         """
+        option_required_products = ["닷모드 투엑스"]
+        
+        def get_key(row):
+            name = row["상품명"]
+            if name in option_required_products:
+                return f"{name} - {row['주문선택사항']}"
+            else:
+                return name
+
+        df["출고제품"] = df.apply(get_key, axis=1)
+        result = df.groupby("출고제품")["주문수량"].sum().reset_index()
+        return result
 
     def count_by_platform(self, df):
         """
@@ -174,6 +177,11 @@ class XLSXParser:
             platform = row["판매사이트명"]
             product_code = row["판매사이트 상품코드"]
 
+            # 추가상품 여부 확인 후 진행
+            if "추가상품" in sale_name:
+                print(f"{sale_name}은 추가상품입니다. 건너뜁니다.")
+                continue
+            
             # 상품 코드 중복 확인
             existing = db.get_product(platform, product_code)
             if existing:
@@ -181,7 +189,7 @@ class XLSXParser:
                 continue
 
             # 제품명 입력받기
-            print(f"\n[등록 대상] 플랫폼: {platform}, 판매상품명: {sale_name}")
+            print(f"\n[등록 대상] 플랫폼: {platform} / 판매상품명: {sale_name} / 옵션명: {row['주문선택사항']}")
             product_name = input("관리상품명을 입력해주세요: ").strip()
             tag = input("관리용 태그를 입력해주세요. (없으면 Enter): ").strip()
 

@@ -32,8 +32,6 @@ class DatabaseManager:
             raise Exception(f"데이터베이스 연결 실패: {str(e)}")
     
     def init_db(self, Base):
-
-
         """
         데이터베이스 초기화
         """

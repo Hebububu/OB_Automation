@@ -10,7 +10,7 @@ class TagManager:
     """태그를 활용하기 위한 클래스입니다."""
     def __init__(self):
         # 사용할 태그 지정
-        self.valid_tags = {"기기", "탱크", "추가상품"}
+        self.valid_tags = {"기기", "탱크"}
     
     def filter_valid_tags(self, df):
         """
