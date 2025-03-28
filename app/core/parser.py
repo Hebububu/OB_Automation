@@ -92,6 +92,30 @@ class XLSXParser:
             logger.error(f"판매자ID별 정렬 실패: {str(e)}")
             raise Exception(f"판매자ID별 정렬 실패: {str(e)}")
         
+    def sort_by_db_product_name(self, df):
+        """
+        DB에 등록된 제품명을 기준으로 데이터 정렬
+        - 추가상품인 경우 정렬기준상품명은 빈 문자열로 설정
+        """
+        db = DatabaseManager()
+    
+        def get_product_name(row):
+            # 추가상품이면 공백 반환
+            if "추가상품" in str(row["상품명"]):
+                return ""
+            
+            # DB 조회해서 product_name 가져오기
+            platform = row["판매사이트명"]
+            product_code = row["판매사이트 상품코드"]
+            product = db.get_product(platform, product_code)
+    
+            return product.product_name if product else row["상품명"]
+    
+        df["정렬기준상품명"] = df.apply(get_product_name, axis=1)
+        sorted_df = df.sort_values("정렬기준상품명").reset_index(drop=True)
+        return sorted_df
+
+
     def sort_by_platform_seller_product(self, df):
         """
         플랫폼, 판매자, 상품 순으로 데이터 정렬

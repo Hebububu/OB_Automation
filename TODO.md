@@ -12,4 +12,6 @@ filter_additional_product(args= validated_df) -> 상품명에 '추가상품'이 
 count_ob(args= filtered_df) -> return product_name 별 총 개수를 포함한 df 
 
 특정 product_name은 옵션명을 표기해야 한다.
+sort_by_db_product_name -> db의 product_name을 기준으로 df를 정렬
 
+추가상품인경우 정렬기준상품명 미표기.

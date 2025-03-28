@@ -22,10 +22,9 @@ sorted_df = parser.sort_by_platform_seller_product(df)
 
 filtered_df = tag.filter_valid_tags(sorted_df)
 
-additional_df = parser.filter_additional_product(sorted_df)
+db_sorted_df = parser.sort_by_db_product_name(filtered_df)
 
-if "주문선택사항" not in additional_df.columns:
-    additional_df["주문선택사항"] = ""
+additional_df = parser.filter_additional_product(sorted_df)
 
 ob_df = pd.concat([filtered_df, additional_df])
 
